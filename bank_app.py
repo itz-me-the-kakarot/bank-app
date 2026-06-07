@@ -3,8 +3,7 @@ import json
 import os
 import streamlit as st
 
-if "accounts" not in st.session_state:
-    st.session_state.accounts = {}
+
 
 def save_accounts():
     data = {}
@@ -75,7 +74,7 @@ def deposit():
         if acc_no in st.session_state.accounts:
             st.session_state.accounts[acc_no].deposit(amount)
             st.success(f"Deposited {amount} berries to account {acc_no}.")
-            save_accounts
+            save_accounts()
         else:
             st.error("Account number not found. Please check and try again.")
 
@@ -132,11 +131,15 @@ def load_accounts():
                     account_data["balance"]
                 )
                 st.session_state.accounts[acc_no].history = account_data["history"]
+
+if "accounts" not in st.session_state:
+    st.session_state.accounts = {}
+    load_accounts()
+
 st.title("Welcome to the Bank App")
 st.write("Please create an account to get started.")
 tab1, tab2, tab3, tab4, tab5= st.tabs(["Create Account", "Deposit", "Withdraw", "Transfer", "Check Balance"])
 
-load_accounts()
 
 with tab1:
     create_account()
